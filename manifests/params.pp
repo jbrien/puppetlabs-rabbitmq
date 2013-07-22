@@ -49,6 +49,7 @@ class rabbitmq::params {
   $manage_service           = true
   $node_ip_address          = 'UNSET'
   $plugin_dir               = "/usr/lib/rabbitmq/lib/rabbitmq_server-${version}/plugins"
+  $sbin_dir                 = "/usr/lib/rabbitmq/lib/rabbitmq_server-${version}/sbin"
   $port                     = '5672'
   $stomp_port               = '6163'
   $wipe_db_on_cookie_change = false

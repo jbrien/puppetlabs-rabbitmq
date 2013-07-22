@@ -22,6 +22,7 @@ class rabbitmq(
   $package_provider         = $rabbitmq::params::package_provider,
   $package_source           = $rabbitmq::params::package_source,
   $plugin_dir               = $rabbitmq::params::plugin_dir,
+  $sbin_dir                 = $rabbitmq::params::sbin_dir,
   $port                     = $rabbitmq::params::port,
   $service_ensure           = $rabbitmq::params::service_ensure,
   $service_manage           = $rabbitmq::params::service_manage,
@@ -40,6 +41,9 @@ class rabbitmq(
   validate_re($port, '\d+')
   validate_re($stomp_port, '\d+')
 
+  Exec {
+    path => "/usr/bin:/usr/local/bin:/bin:${$sbin_dir}"
+  }
 
   if $erlang_manage {
     include '::erlang'
@@ -60,15 +64,14 @@ class rabbitmq(
   }
 
   if $admin_enable {
-    include '::rabbitmq::install::rabbitmqadmin'
 
     rabbitmq_plugin { 'rabbitmq_management':
       ensure  => present,
+      provider => 'rabbitmqplugins',
       require => Class['rabbitmq::install'],
       notify  => Class['rabbitmq::service']
     }
 
-    Class['::rabbitmq::service'] -> Class['::rabbitmq::install::rabbitmqadmin']
   }
 
   # Anchor this as per #8140 - this ensures that classes won't float off and
