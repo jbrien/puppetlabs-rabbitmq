@@ -21,12 +21,13 @@ RSpec.configure do |c|
 
     # We need EPEL for erlang.
     if node.facts['osfamily'] == 'RedHat'
-      shell('rpm -i http://mirrors.rit.edu/epel/6/i386/epel-release-6-8.noarch.rpm')
+      shell('puppet module install stahnma-epel')
+      #shell('rpm -i http://mirrors.rit.edu/epel/6/i386/epel-release-6-8.noarch.rpm')
     end
 
     # Install modules and dependencies
     puppet_module_install(:source => proj_root, :module_name => 'rabbitmq')
-    puppet_module_install(:source => "#{proj_root}/../erlang", :module_name => 'erlang')
+    puppet_module_install(:source => "#{proj_root}/../puppet-erlang", :module_name => 'erlang')
     shell('puppet module install puppetlabs-stdlib')
     shell('puppet module install puppetlabs-apt')
   end
